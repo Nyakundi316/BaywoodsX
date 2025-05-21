@@ -1,0 +1,325 @@
+'use client'
+
+import Link from 'next/link'
+import { useState, useEffect, useRef } from 'react'
+import { ShoppingCart, ChevronDown, X, Menu, User, LogIn, LogOut, Settings } from 'lucide-react'
+import { useCart } from '../context/CartContext'
+import { usePathname } from 'next/navigation'
+import { motion, AnimatePresence } from 'framer-motion'
+
+export default function Navbar() {
+    const [isOpen, setIsOpen] = useState(false)
+    const [isShopDropdownOpen, setIsShopDropdownOpen] = useState(false)
+    const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false)
+    const [scrolled, setScrolled] = useState(false)
+    const { cartCount } = useCart()
+    const pathname = usePathname()
+    const shopDropdownRef = useRef<HTMLDivElement>(null)
+    const accountDropdownRef = useRef<HTMLDivElement>(null)
+
+    // Mock authentication state - replace with your actual auth logic
+    const [isAuthenticated, setIsAuthenticated] = useState(false)
+    const [userName, setUserName] = useState('John Doe')
+
+    // Close dropdowns when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (shopDropdownRef.current && !shopDropdownRef.current.contains(event.target as Node)) {
+                setIsShopDropdownOpen(false)
+            }
+            if (accountDropdownRef.current && !accountDropdownRef.current.contains(event.target as Node)) {
+                setIsAccountDropdownOpen(false)
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [])
+
+    // Scroll effect
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 10)
+        }
+        window.addEventListener('scroll', handleScroll)
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
+
+    // Close mobile menu when route changes
+    useEffect(() => {
+        setIsOpen(false)
+    }, [pathname])
+
+    const shopLinks = [
+        { href: '/shop/clothing', label: 'Clothing' },
+        { href: '/shop/shoes', label: 'Shoes' },
+        { href: '/shop/accessories', label: 'Accessories' },
+        { href: '/shop/all', label: 'View All' },
+    ]
+
+    const navLinks = [
+        { href: '/', label: 'Home' },
+        { href: '/about', label: 'About' },
+        { href: '/contact', label: 'Contact' },
+    ]
+
+    const accountLinks = isAuthenticated
+        ? [
+            { href: '/account', label: 'My Account', icon: <User className="w-4 h-4" /> },
+            { href: '/account/settings', label: 'Settings', icon: <Settings className="w-4 h-4" /> },
+            { href: '/logout', label: 'Sign Out', icon: <LogOut className="w-4 h-4" /> },
+        ]
+        : [
+            { href: '/login', label: 'Sign In', icon: <LogIn className="w-4 h-4" /> },
+            { href: '/register', label: 'Create Account', icon: <User className="w-4 h-4" /> },
+        ]
+
+    const handleLogout = () => {
+        // Replace with your actual logout logic
+        setIsAuthenticated(false)
+        setIsAccountDropdownOpen(false)
+    }
+
+    return (
+        <nav
+            className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 shadow-md backdrop-blur-sm' : 'bg-white/90'
+                }`}
+        >
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-between items-center h-16">
+                    {/* Logo */}
+                    <Link
+                        href="/"
+                        className="text-2xl font-bold text-gray-800 hover:text-primary transition-colors"
+                        aria-label="Home"
+                    >
+                     XWoods
+                    </Link>
+
+                    {/* Desktop Menu */}
+                    <div className="hidden md:flex space-x-8 items-center">
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                className={`relative text-gray-700 hover:text-black transition-colors ${pathname === link.href ? 'font-medium text-black' : ''
+                                    }`}
+                            >
+                                {link.label}
+                                {pathname === link.href && (
+                                    <motion.span
+                                        layoutId="activeNavLink"
+                                        className="absolute left-0 bottom-0 w-full h-0.5 bg-black"
+                                        transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                                    />
+                                )}
+                            </Link>
+                        ))}
+
+                        {/* Shop Dropdown */}
+                        <div
+                            className="relative group"
+                            ref={shopDropdownRef}
+                            onMouseEnter={() => setIsShopDropdownOpen(true)}
+                            onMouseLeave={() => setIsShopDropdownOpen(false)}
+                        >
+                            <button
+                                className={`flex items-center text-gray-700 hover:text-black transition-colors focus:outline-none ${pathname.startsWith('/shop') ? 'font-medium text-black' : ''
+                                    }`}
+                                aria-expanded={isShopDropdownOpen}
+                                aria-haspopup="true"
+                                onClick={() => setIsShopDropdownOpen(!isShopDropdownOpen)}
+                            >
+                                Shop
+                                <ChevronDown
+                                    className={`ml-1 h-4 w-4 transition-transform ${isShopDropdownOpen ? 'rotate-180' : ''
+                                        }`}
+                                />
+                            </button>
+
+                            <AnimatePresence>
+                                {isShopDropdownOpen && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10 border border-gray-100"
+                                    >
+                                        {shopLinks.map((link) => (
+                                            <Link
+                                                key={link.href}
+                                                href={link.href}
+                                                className={`block px-4 py-2 text-sm ${pathname === link.href
+                                                        ? 'bg-gray-50 text-black font-medium'
+                                                        : 'text-gray-700 hover:bg-gray-50'
+                                                    } transition-colors first:rounded-t-md last:rounded-b-md`}
+                                            >
+                                                {link.label}
+                                            </Link>
+                                        ))}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    </div>
+
+                    {/* Right Side Icons */}
+                    <div className="flex items-center space-x-6">
+                        {/* Account Dropdown */}
+                        <div
+                            className="relative"
+                            ref={accountDropdownRef}
+                            onMouseEnter={() => setIsAccountDropdownOpen(true)}
+                            onMouseLeave={() => setIsAccountDropdownOpen(false)}
+                        >
+                            <button
+                                className="flex items-center space-x-1 text-gray-700 hover:text-black transition-colors focus:outline-none"
+                                onClick={() => setIsAccountDropdownOpen(!isAccountDropdownOpen)}
+                                aria-expanded={isAccountDropdownOpen}
+                                aria-haspopup="true"
+                            >
+                                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                                    <User className="w-4 h-4" />
+                                </div>
+                                {isAuthenticated && (
+                                    <span className="hidden lg:inline text-sm">{userName}</span>
+                                )}
+                            </button>
+
+                            <AnimatePresence>
+                                {isAccountDropdownOpen && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10 border border-gray-100"
+                                    >
+                                        {isAuthenticated && (
+                                            <div className="px-4 py-3 border-b border-gray-100">
+                                                <p className="text-sm font-medium text-gray-900">{userName}</p>
+                                                <p className="text-xs text-gray-500">Premium Member</p>
+                                            </div>
+                                        )}
+                                        {accountLinks.map((link) => (
+                                            <Link
+                                                key={link.href}
+                                                href={link.href}
+                                                className={`flex items-center px-4 py-2 text-sm ${pathname === link.href
+                                                        ? 'bg-gray-50 text-black font-medium'
+                                                        : 'text-gray-700 hover:bg-gray-50'
+                                                    } transition-colors first:rounded-t-md last:rounded-b-md`}
+                                                onClick={link.label === 'Sign Out' ? handleLogout : undefined}
+                                            >
+                                                <span className="mr-2">{link.icon}</span>
+                                                {link.label}
+                                            </Link>
+                                        ))}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
+                        {/* Cart */}
+                        <Link
+                            href="/cart"
+                            className="relative p-1 rounded-full hover:bg-gray-100 transition-colors"
+                            aria-label="Shopping Cart"
+                        >
+                            <ShoppingCart className="w-5 h-5 text-gray-700 hover:text-black" />
+                            {cartCount > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                    {cartCount}
+                                </span>
+                            )}
+                        </Link>
+
+                        {/* Mobile Menu Button */}
+                        <button
+                            onClick={() => setIsOpen(!isOpen)}
+                            className="md:hidden p-1 rounded-full hover:bg-gray-100 transition-colors focus:outline-none"
+                            aria-label={isOpen ? 'Close menu' : 'Open menu'}
+                        >
+                            {isOpen ? (
+                                <X className="w-5 h-5 text-gray-700" />
+                            ) : (
+                                <Menu className="w-5 h-5 text-gray-700" />
+                            )}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Mobile Menu */}
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="md:hidden overflow-hidden"
+                    >
+                        <div className="px-4 pb-4 space-y-3">
+                            {navLinks.map((link) => (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className={`block py-2 px-3 rounded-md ${pathname === link.href
+                                            ? 'bg-gray-100 text-black font-medium'
+                                            : 'text-gray-700 hover:bg-gray-50'
+                                        } transition-colors`}
+                                >
+                                    {link.label}
+                                </Link>
+                            ))}
+
+                            <div className="pt-2 border-t border-gray-100">
+                                <p className="px-3 py-2 text-sm font-medium text-gray-500">
+                                    Shop Categories
+                                </p>
+                                <div className="space-y-1">
+                                    {shopLinks.map((link) => (
+                                        <Link
+                                            key={link.href}
+                                            href={link.href}
+                                            className={`block py-2 px-3 rounded-md text-sm ${pathname === link.href
+                                                    ? 'bg-gray-100 text-black font-medium'
+                                                    : 'text-gray-700 hover:bg-gray-50'
+                                                } transition-colors`}
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="pt-2 border-t border-gray-100">
+                                <p className="px-3 py-2 text-sm font-medium text-gray-500">
+                                    Account
+                                </p>
+                                <div className="space-y-1">
+                                    {accountLinks.map((link) => (
+                                        <Link
+                                            key={link.href}
+                                            href={link.href}
+                                            className={`flex items-center py-2 px-3 rounded-md text-sm ${pathname === link.href
+                                                    ? 'bg-gray-100 text-black font-medium'
+                                                    : 'text-gray-700 hover:bg-gray-50'
+                                                } transition-colors`}
+                                            onClick={link.label === 'Sign Out' ? handleLogout : undefined}
+                                        >
+                                            <span className="mr-2">{link.icon}</span>
+                                            {link.label}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </nav>
+    )
+}
