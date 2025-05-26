@@ -23,17 +23,39 @@ export default function RegisterPage() {
     setError('')
     setSuccess('')
 
-    // Simulate registration logic
-    if (!formData.name || !formData.email || !formData.password) {
+    const { name, email, password } = formData
+
+    if (!name || !email || !password) {
       setError('All fields are required.')
       return
     }
 
-    // Here you would send formData to your backend API
-    setSuccess('Account created! Redirecting...')
-    setTimeout(() => {
-      router.push('/login')
-    }, 1500)
+    try {
+      const res = await fetch('http://localhost:5000/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: name,
+          email,
+          password
+        })
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        setSuccess('Account created! Redirecting...')
+        setTimeout(() => {
+          router.push('/login')
+        }, 1500)
+      } else {
+        setError(data.error || 'Registration failed.')
+      }
+    } catch (err) {
+      setError('Server error. Please try again later.')
+    }
   }
 
   return (

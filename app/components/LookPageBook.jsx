@@ -24,7 +24,8 @@ export default function LookbookPage() {
               className="snap-start min-w-[280px] sm:min-w-[320px] h-[450px] relative rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300"
             >
               <Image
-                src={`https://images.pexels.com/photos/\${100000 + i}/pexels-photo-\${100000 + i}.jpeg?auto=compress&cs=tinysrgb&h=750&w=500`}
+                src={`https://images.pexels.com/photos/${100000 + i}/pexels-photo-${100000 + i}.jpeg?auto=compress&cs=tinysrgb&h=750&w=500`}
+
                 alt={`Baywoods Look ${i}`}
                 fill
                 className="object-cover hover:scale-110 transition-transform duration-500"

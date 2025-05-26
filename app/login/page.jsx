@@ -13,12 +13,26 @@ export default function LoginPage() {
     e.preventDefault()
     setError('')
 
-    // Temporary mock logic
-    if (email === 'admin@baywoods.com' && password === 'password123') {
-      router.push('/') // Redirect to homepage after login
-    } else {
-      setError('Invalid email or password.')
-    }
+   try {
+  const res = await fetch('http://localhost:5000/auth/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email, password })
+  })
+
+  const data = await res.json()
+
+  if (res.ok) {
+    localStorage.setItem('token', data.access_token) // Store JWT
+    router.push('/')
+  } else {
+    setError(data.message || 'Login failed')
+  }
+} catch (err) {
+  setError('Server error. Please try again later.')
+}
 
     // For real apps: send POST request to backend for authentication
   }

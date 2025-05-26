@@ -18,7 +18,7 @@ const mockMessages = [
 export default function MessagesPage() {
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Customer Messages</h1>
+      <h1 className="text-gray-800 text-2xl font-bold mb-6">Customer Messages</h1>
       <div className="space-y-4">
         {mockMessages.map((msg) => (
           <div key={msg.id} className="bg-white shadow rounded-lg p-4">

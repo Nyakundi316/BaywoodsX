@@ -28,7 +28,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "app/shop/page.jsx", "app/components/NewArrivals.jsx"  ],
+, "app/shop/page.jsx", "app/components/NewArrivals.jsx", "app/components/ProductCard.tsx", "app/register/page.jsx"  ],
   "exclude": [
     "node_modules"
   ]

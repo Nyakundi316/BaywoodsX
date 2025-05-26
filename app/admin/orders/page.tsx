@@ -18,7 +18,7 @@ const mockOrders = [
 export default function OrdersPage() {
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Orders</h1>
+      <h1 className="text-gray-800 text-2xl font-bold mb-6">Orders</h1>
       <div className="bg-white shadow rounded-lg overflow-hidden">
         <table className="min-w-full">
           <thead className="bg-gray-100">

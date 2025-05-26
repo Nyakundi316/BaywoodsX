@@ -12,7 +12,8 @@ export default function ClothingPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch("/api/products?category=clothing");
+        const res = await fetch("http://127.0.0.1:5000/api/products?category=clothing");
+
         const data = await res.json();
         setProducts(data);
       } catch (err) {

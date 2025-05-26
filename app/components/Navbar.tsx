@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
-import { ShoppingCart, ChevronDown, X, Menu, User, LogIn, LogOut, Settings } from 'lucide-react'
+import { ShoppingCart, ChevronDown, X, Menu, User, LogIn, LogOut, Settings, Search, Heart } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -12,6 +12,7 @@ export default function Navbar() {
     const [isShopDropdownOpen, setIsShopDropdownOpen] = useState(false)
     const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false)
     const [scrolled, setScrolled] = useState(false)
+    const [searchQuery, setSearchQuery] = useState('')
     const { cartCount } = useCart()
     const pathname = usePathname()
     const shopDropdownRef = useRef<HTMLDivElement>(null)
@@ -59,8 +60,17 @@ export default function Navbar() {
 
     const navLinks = [
         { href: '/', label: 'Home' },
-        { href: '/about', label: 'About' },
-        { href: '/contact', label: 'Contact' },
+        
+    ]
+
+    const categoryLinks = [
+        { href: '/women', label: 'Women' },
+        { href: '/men', label: 'Men' },
+        { href: '/kids', label: 'Kids' },
+        { href: '/sports', label: 'Sports' },
+        { href: '/brands', label: 'Brands' },
+        { href: '/new', label: 'New' },
+        { href: '/sale', label: 'Sale' },
     ]
 
     const accountLinks = isAuthenticated
@@ -75,9 +85,14 @@ export default function Navbar() {
         ]
 
     const handleLogout = () => {
-        // Replace with your actual logout logic
         setIsAuthenticated(false)
         setIsAccountDropdownOpen(false)
+    }
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault()
+        // Handle search logic here
+        console.log('Searching for:', searchQuery)
     }
 
     return (
@@ -86,19 +101,130 @@ export default function Navbar() {
                 }`}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-16">
+                {/* Top Search Bar Section */}
+                <div className="flex items-center justify-between py-2 border-b border-gray-200">
                     {/* Logo */}
                     <Link
                         href="/"
                         className="text-2xl font-bold text-gray-800 hover:text-primary transition-colors"
                         aria-label="Home"
                     >
-                     XWoods
+                        BW.X
                     </Link>
 
+                    {/* Search Bar */}
+                    <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-4">
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="Search"
+                                className="w-full py-2 px-4 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                            <button
+                                type="submit"
+                                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                            >
+                                <Search className="w-5 h-5" />
+                            </button>
+                        </div>
+                    </form>
+
+                    {/* Right Icons */}
+                    <div className="flex items-center space-x-4">
+                        <Link
+                            href="/favorites"
+                            className="p-1 rounded-full hover:bg-gray-100 transition-colors"
+                            aria-label="Favorites"
+                        >
+                            <Heart className="w-5 h-5 text-gray-700 hover:text-black" />
+                        </Link>
+
+                        <Link
+                            href="/cart"
+                            className="relative p-1 rounded-full hover:bg-gray-100 transition-colors"
+                            aria-label="Shopping Cart"
+                        >
+                            <ShoppingCart className="w-5 h-5 text-gray-700 hover:text-black" />
+                            {cartCount > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                    {cartCount}
+                                </span>
+                            )}
+                        </Link>
+
+                        <div className="relative" ref={accountDropdownRef}>
+                            <button
+                                className="flex items-center space-x-1 text-gray-700 hover:text-black transition-colors focus:outline-none"
+                                onClick={() => setIsAccountDropdownOpen(!isAccountDropdownOpen)}
+                                aria-expanded={isAccountDropdownOpen}
+                                aria-haspopup="true"
+                            >
+                                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                                    <User className="w-4 h-4" />
+                                </div>
+                            </button>
+
+                            <AnimatePresence>
+                                {isAccountDropdownOpen && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10 border border-gray-100"
+                                    >
+                                        {isAuthenticated && (
+                                            <div className="px-4 py-3 border-b border-gray-100">
+                                                <p className="text-sm font-medium text-gray-900">{userName}</p>
+                                                <p className="text-xs text-gray-500">Premium Member</p>
+                                            </div>
+                                        )}
+                                        {accountLinks.map((link) => (
+                                            <Link
+                                                key={link.href}
+                                                href={link.href}
+                                                className={`flex items-center px-4 py-2 text-sm ${pathname === link.href
+                                                        ? 'bg-gray-50 text-black font-medium'
+                                                        : 'text-gray-700 hover:bg-gray-50'
+                                                    } transition-colors first:rounded-t-md last:rounded-b-md`}
+                                                onClick={link.label === 'Sign Out' ? handleLogout : undefined}
+                                            >
+                                                <span className="mr-2">{link.icon}</span>
+                                                {link.label}
+                                            </Link>
+                                        ))}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Main Navigation Section */}
+                <div className="flex justify-between items-center h-12">
                     {/* Desktop Menu */}
-                    <div className="hidden md:flex space-x-8 items-center">
+                    <div className="hidden md:flex space-x-6 items-center">
                         {navLinks.map((link) => (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                className={`relative text-gray-700 hover:text-black transition-colors ${pathname === link.href ? 'font-medium text-black' : ''
+                                    }`}
+                            >
+                                {link.label}
+                                {pathname === link.href && (
+                                    <motion.span
+                                        layoutId="activeNavLink"
+                                        className="absolute left-0 bottom-0 w-full h-0.5 bg-black"
+                                        transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                                    />
+                                )}
+                            </Link>
+                        ))}
+
+                        {categoryLinks.map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
@@ -164,90 +290,18 @@ export default function Navbar() {
                         </div>
                     </div>
 
-                    {/* Right Side Icons */}
-                    <div className="flex items-center space-x-6">
-                        {/* Account Dropdown */}
-                        <div
-                            className="relative"
-                            ref={accountDropdownRef}
-                            onMouseEnter={() => setIsAccountDropdownOpen(true)}
-                            onMouseLeave={() => setIsAccountDropdownOpen(false)}
-                        >
-                            <button
-                                className="flex items-center space-x-1 text-gray-700 hover:text-black transition-colors focus:outline-none"
-                                onClick={() => setIsAccountDropdownOpen(!isAccountDropdownOpen)}
-                                aria-expanded={isAccountDropdownOpen}
-                                aria-haspopup="true"
-                            >
-                                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-                                    <User className="w-4 h-4" />
-                                </div>
-                                {isAuthenticated && (
-                                    <span className="hidden lg:inline text-sm">{userName}</span>
-                                )}
-                            </button>
-
-                            <AnimatePresence>
-                                {isAccountDropdownOpen && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: -10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -10 }}
-                                        transition={{ duration: 0.2 }}
-                                        className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10 border border-gray-100"
-                                    >
-                                        {isAuthenticated && (
-                                            <div className="px-4 py-3 border-b border-gray-100">
-                                                <p className="text-sm font-medium text-gray-900">{userName}</p>
-                                                <p className="text-xs text-gray-500">Premium Member</p>
-                                            </div>
-                                        )}
-                                        {accountLinks.map((link) => (
-                                            <Link
-                                                key={link.href}
-                                                href={link.href}
-                                                className={`flex items-center px-4 py-2 text-sm ${pathname === link.href
-                                                        ? 'bg-gray-50 text-black font-medium'
-                                                        : 'text-gray-700 hover:bg-gray-50'
-                                                    } transition-colors first:rounded-t-md last:rounded-b-md`}
-                                                onClick={link.label === 'Sign Out' ? handleLogout : undefined}
-                                            >
-                                                <span className="mr-2">{link.icon}</span>
-                                                {link.label}
-                                            </Link>
-                                        ))}
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
-
-                        {/* Cart */}
-                        <Link
-                            href="/cart"
-                            className="relative p-1 rounded-full hover:bg-gray-100 transition-colors"
-                            aria-label="Shopping Cart"
-                        >
-                            <ShoppingCart className="w-5 h-5 text-gray-700 hover:text-black" />
-                            {cartCount > 0 && (
-                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                                    {cartCount}
-                                </span>
-                            )}
-                        </Link>
-
-                        {/* Mobile Menu Button */}
-                        <button
-                            onClick={() => setIsOpen(!isOpen)}
-                            className="md:hidden p-1 rounded-full hover:bg-gray-100 transition-colors focus:outline-none"
-                            aria-label={isOpen ? 'Close menu' : 'Open menu'}
-                        >
-                            {isOpen ? (
-                                <X className="w-5 h-5 text-gray-700" />
-                            ) : (
-                                <Menu className="w-5 h-5 text-gray-700" />
-                            )}
-                        </button>
-                    </div>
+                    {/* Mobile Menu Button */}
+                    <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="md:hidden p-1 rounded-full hover:bg-gray-100 transition-colors focus:outline-none"
+                        aria-label={isOpen ? 'Close menu' : 'Open menu'}
+                    >
+                        {isOpen ? (
+                            <X className="w-5 h-5 text-gray-700" />
+                        ) : (
+                            <Menu className="w-5 h-5 text-gray-700" />
+                        )}
+                    </button>
                 </div>
             </div>
 
@@ -262,6 +316,25 @@ export default function Navbar() {
                         className="md:hidden overflow-hidden"
                     >
                         <div className="px-4 pb-4 space-y-3">
+                            {/* Mobile Search */}
+                            <form onSubmit={handleSearch} className="pt-2">
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        placeholder="Search"
+                                        className="w-full py-2 px-4 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
+                                    <button
+                                        type="submit"
+                                        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                                    >
+                                        <Search className="w-5 h-5" />
+                                    </button>
+                                </div>
+                            </form>
+
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.href}
@@ -274,6 +347,27 @@ export default function Navbar() {
                                     {link.label}
                                 </Link>
                             ))}
+
+                            {/* Mobile Category Links */}
+                            <div className="pt-2 border-t border-gray-100">
+                                <p className="px-3 py-2 text-sm font-medium text-gray-500">
+                                    Categories
+                                </p>
+                                <div className="space-y-1">
+                                    {categoryLinks.map((link) => (
+                                        <Link
+                                            key={link.href}
+                                            href={link.href}
+                                            className={`block py-2 px-3 rounded-md text-sm ${pathname === link.href
+                                                    ? 'bg-gray-100 text-black font-medium'
+                                                    : 'text-gray-700 hover:bg-gray-50'
+                                                } transition-colors`}
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
 
                             <div className="pt-2 border-t border-gray-100">
                                 <p className="px-3 py-2 text-sm font-medium text-gray-500">
