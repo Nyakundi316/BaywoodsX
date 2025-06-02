@@ -1,4 +1,3 @@
-// app/collection/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -7,12 +6,15 @@ import { ShoppingCart } from 'lucide-react';
 
 interface Product {
   name: string;
-  price: string;
+  price: string | number;
   image: string;
   images?: string[];
   slug: string;
   brand: string;
   quantity?: number;
+  rating?: number;
+  reviewCount?: number;
+  colors?: string[];
 }
 
 export default function CollectionPage() {
@@ -33,7 +35,9 @@ export default function CollectionPage() {
     let updatedCart;
 
     if (existing) {
-      updatedCart = cart.map(p => p.slug === product.slug ? { ...p, quantity: (p.quantity || 1) + 1 } : p);
+      updatedCart = cart.map(p =>
+        p.slug === product.slug ? { ...p, quantity: (p.quantity || 1) + 1 } : p
+      );
     } else {
       updatedCart = [...cart, { ...product, quantity: 1 }];
     }
@@ -52,7 +56,9 @@ export default function CollectionPage() {
     <div className="min-h-screen w-full bg-white">
       <div className="max-w-[90rem] mx-auto px-6 py-16">
         <div className="flex justify-between items-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-black">🔥 Baywoods Shoe Collection</h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-black">
+            🔥 Baywoods Shoe Collection
+          </h1>
           <div className="relative">
             <ShoppingCart className="w-7 h-7 text-black" />
             {cart.length > 0 && (
@@ -67,18 +73,18 @@ export default function CollectionPage() {
           const brandProducts = products.filter(p => p.brand === brand);
           return (
             <div key={brand} className="mb-20">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8 border-b pb-3 border-gray-300">{brand}</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-8 border-b pb-3 border-gray-300">
+                {brand}
+              </h2>
+
               {brandProducts.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                  {brandProducts.map((product, index) => (
-                    <div key={index} className="relative group shadow rounded-lg overflow-hidden transition-transform duration-300 hover:scale-105 hover:ring-2 hover:ring-black">
-                      <ProductCard
-                        name={product.name}
-                        price={product.price}
-                        image={product.image}
-                        images={product.images}
-                        slug={product.slug}
-                      />
+                  {brandProducts.map((product) => (
+                    <div
+                      key={product.slug}
+                      className="relative group shadow rounded-lg overflow-hidden transition-transform duration-300 hover:scale-105 hover:ring-2 hover:ring-black"
+                    >
+                      <ProductCard product={product} />
                       <button
                         onClick={() => addToCart(product)}
                         className="absolute top-3 right-3 bg-black text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition hover:bg-gray-800"
@@ -89,7 +95,9 @@ export default function CollectionPage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-700 italic">No products available under <strong>{brand}</strong> yet.</p>
+                <p className="text-gray-700 italic">
+                  No products available under <strong>{brand}</strong> yet.
+                </p>
               )}
             </div>
           );

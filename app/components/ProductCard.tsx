@@ -28,22 +28,17 @@ export default function ProductCard({ product }) {
       <div className="relative">
         <img 
           src={product.image} 
-          alt={product.name} 
+          alt={product.name || "Product image"} 
           className="w-full h-64 object-cover transition-transform duration-300 hover:scale-105"
           loading="lazy"
         />
         {/* Badges */}
         <div className="absolute top-2 left-2 flex flex-col space-y-1">
-          {product.isNew && (
-            <span className="bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded">New</span>
-          )}
-          {product.isSponsored && (
-            <span className="bg-purple-500 text-white text-xs font-semibold px-2 py-1 rounded">Sponsored</span>
-          )}
-          {product.isLowStock && (
-            <span className="bg-yellow-500 text-white text-xs font-semibold px-2 py-1 rounded">Low Stock</span>
-          )}
+          {product.isNew && <span className="bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded">New</span>}
+          {product.isSponsored && <span className="bg-purple-500 text-white text-xs font-semibold px-2 py-1 rounded">Sponsored</span>}
+          {product.isLowStock && <span className="bg-yellow-500 text-white text-xs font-semibold px-2 py-1 rounded">Low Stock</span>}
         </div>
+
         {/* Favorite Button */}
         <button 
           onClick={toggleFavorite}
@@ -52,6 +47,7 @@ export default function ProductCard({ product }) {
         >
           <HeartIcon className={`h-5 w-5 ${isFavorite ? 'text-red-500 fill-current' : 'text-gray-400'}`} />
         </button>
+
         {/* Quick View */}
         {isHovered && (
           <button className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black text-white px-4 py-2 rounded-md text-sm font-medium opacity-90 hover:opacity-100 transition-opacity">
@@ -70,7 +66,7 @@ export default function ProductCard({ product }) {
           <div className="flex items-center">
             <StarIcon className="h-4 w-4 text-yellow-400 fill-current" />
             <span className="ml-1 text-sm text-gray-600">
-              {product.rating} ({product.reviewCount})
+              {(product.rating || 0).toFixed(1)} ({product.reviewCount || 0})
             </span>
           </div>
         </div>
@@ -103,7 +99,7 @@ export default function ProductCard({ product }) {
               <div className="flex -space-x-1">
                 {product.colors.slice(0, 3).map((color, index) => (
                   <span 
-                    key={index}
+                    key={color + index}
                     className="w-5 h-5 rounded-full border border-gray-200 shadow-sm hover:transform hover:scale-125 hover:z-10 transition-transform"
                     style={{ backgroundColor: color.toLowerCase() }}
                     title={color}
@@ -135,8 +131,8 @@ ProductCard.propTypes = {
     image: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     brand: PropTypes.string.isRequired,
-    rating: PropTypes.number.isRequired,
-    reviewCount: PropTypes.number.isRequired,
+    rating: PropTypes.number,
+    reviewCount: PropTypes.number,
     price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     originalPrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     colors: PropTypes.arrayOf(PropTypes.string),
