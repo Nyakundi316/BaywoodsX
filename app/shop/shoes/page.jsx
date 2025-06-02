@@ -15,7 +15,7 @@ export default function ShoesPage() {
     async function fetchData() {
       try {
         setIsLoading(true);
-        const res = await fetch("/api/products?category=sneakers");
+        const res = await fetch("http://127.0.0.1:5000/api/products?category=shoes");
         if (!res.ok) throw new Error("Failed to fetch products");
         const data = await res.json();
         setProducts(data);
@@ -77,7 +77,7 @@ export default function ShoesPage() {
           className="mb-8 flex gap-4 items-center justify-center flex-wrap"
         >
           <span className="font-semibold">Filter by size:</span>
-          {["40", "41", "42", "43", "44", "45"].map((size) => (
+          {["37", "38","39", "40", "41", "42", "43", "44", "45"].map((size) => (
             <motion.button
               key={size}
               whileHover={{ scale: 1.05 }}

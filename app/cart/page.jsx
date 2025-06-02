@@ -1,4 +1,3 @@
-// app/shop/cart/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -44,20 +43,26 @@ export default function CartPage() {
       window.location.href = data.url;
     }
   };
+
   const handleMpesaCheckout = async () => {
     const phone = prompt("Enter your Safaricom number:");
+    if (!phone) return;
 
-    const res = await fetch('/api/mpesa/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone, amount: subtotal })
-    });
+    try {
+      const res = await fetch(" https://7b1d-41-90-65-136.ngrok-free.app -> http://localhost:5000 ", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, amount: subtotal }),
+      });
 
-    const data = await res.json();
-    console.log(data);
-    alert("Check your phone to complete payment via M-Pesa.");
+      const data = await res.json();
+      console.log(data);
+      alert("Check your phone to complete payment via M-Pesa.");
+    } catch (error) {
+      console.error("M-Pesa checkout failed:", error);
+      alert("Failed to initiate M-Pesa payment.");
+    }
   };
-
 
   return (
     <section className="bg-white text-black py-16 px-4 sm:px-6 lg:px-8 min-h-screen">
@@ -77,12 +82,7 @@ export default function CartPage() {
               {cartItems.map((item, index) => (
                 <div key={index} className="flex gap-4 items-start border-b pb-6">
                   <div className="relative w-28 h-28 rounded-lg overflow-hidden shadow-sm">
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      fill
-                      className="object-cover"
-                    />
+                    <Image src={item.image} alt={item.name} fill className="object-cover" />
                   </div>
                   <div className="flex-1">
                     <h3 className="font-semibold text-lg mb-1">{item.name}</h3>
@@ -137,15 +137,14 @@ export default function CartPage() {
             </div>
           </div>
         )}
+
         <button
           onClick={handleMpesaCheckout}
           className="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition"
         >
           Pay with M-Pesa
         </button>
-
       </div>
     </section>
-
   );
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import Home from './components/NewArrivals'
-import HeroSection from './components/HeroSectio'
+import HeroSection from './components/HeroSection'
 import NewArrivals from './components/NewArrivals'
 import LookBookPage from './components/LookPageBook'
 import Footer from './components/Footer'

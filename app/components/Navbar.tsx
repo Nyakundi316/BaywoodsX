@@ -11,12 +11,14 @@ export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false)
     const [isShopDropdownOpen, setIsShopDropdownOpen] = useState(false)
     const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false)
+    const [isSportsDropdownOpen, setIsSportsDropdownOpen] = useState(false)
     const [scrolled, setScrolled] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
     const { cartCount } = useCart()
     const pathname = usePathname()
     const shopDropdownRef = useRef<HTMLDivElement>(null)
     const accountDropdownRef = useRef<HTMLDivElement>(null)
+    const sportsDropdownRef = useRef<HTMLDivElement>(null)
 
     // Mock authentication state - replace with your actual auth logic
     const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -30,6 +32,9 @@ export default function Navbar() {
             }
             if (accountDropdownRef.current && !accountDropdownRef.current.contains(event.target as Node)) {
                 setIsAccountDropdownOpen(false)
+            }
+            if (sportsDropdownRef.current && !sportsDropdownRef.current.contains(event.target as Node)) {
+                setIsSportsDropdownOpen(false)
             }
         }
 
@@ -60,15 +65,12 @@ export default function Navbar() {
 
     const navLinks = [
         { href: '/', label: 'Home' },
-        
     ]
 
     const categoryLinks = [
         { href: '/women', label: 'Women' },
         { href: '/men', label: 'Men' },
         { href: '/kids', label: 'Kids' },
-        { href: '/sports', label: 'Sports' },
-        { href: '/brands', label: 'Brands' },
         { href: '/new', label: 'New' },
         { href: '/sale', label: 'Sale' },
     ]
@@ -242,6 +244,93 @@ export default function Navbar() {
                             </Link>
                         ))}
 
+                        {/* Sports Dropdown */}
+                        <div
+                            className="relative group"
+                            ref={sportsDropdownRef}
+                            onMouseEnter={() => setIsSportsDropdownOpen(true)}
+                            onMouseLeave={() => setIsSportsDropdownOpen(false)}
+                        >
+                            <button
+                                className={`flex items-center text-gray-700 hover:text-black transition-colors ${
+                                    pathname.startsWith('/sports') ? 'font-medium text-black' : ''
+                                }`}
+                                aria-expanded={isSportsDropdownOpen}
+                                aria-haspopup="true"
+                            >
+                                Sports
+                                <ChevronDown
+                                    className={`ml-1 h-4 w-4 transition-transform ${isSportsDropdownOpen ? 'rotate-180' : ''
+                                        }`}
+                                />
+                            </button>
+
+                            <AnimatePresence>
+                                {isSportsDropdownOpen && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="absolute left-0 mt-4 w-[900px] bg-white shadow-xl rounded-lg z-20 border border-gray-100 p-6 grid grid-cols-4 gap-6"
+                                    >
+                                        <div>
+                                            <h4 className="font-semibold mb-2 text-black">Women</h4>
+                                            <ul className="space-y-1 text-sm text-black">
+                                                <li><Link href="/sports/women/running" className="hover:text-black">Running</Link></li>
+                                                <li><Link href="/sports/women/gym" className="hover:text-black">Training & Gym</Link></li>
+                                                <li><Link href="/sports/women/tennis" className="hover:text-black">Tennis & Pickleball</Link></li>
+                                                <li><Link href="/sports/women/hiking" className="hover:text-black">Hiking</Link></li>
+                                                <li><Link href="/sports/women/golf" className="hover:text-black">Golf</Link></li>
+                                                <li><Link href="/sports/women/walking" className="hover:text-black">Walking</Link></li>
+                                                <li><Link href="/sports/women/cleats" className="hover:text-black">All Sports Cleats</Link></li>
+                                                <li><Link href="/sports/women/yoga" className="hover:text-black">Yoga</Link></li>
+                                            </ul>
+                                        </div>
+
+                                        <div>
+                                            <h4 className="font-semibold mb-2 text-black">Men</h4>
+                                            <ul className="space-y-1 text-sm text-black">
+                                                <li><Link href="/sports/men/running" className="hover:text-black">Running</Link></li>
+                                                <li><Link href="/sports/men/gym" className="hover:text-black">Training & Gym</Link></li>
+                                                <li><Link href="/sports/men/tennis" className="hover:text-black">Tennis & Pickleball</Link></li>
+                                                <li><Link href="/sports/men/hiking" className="hover:text-black">Hiking</Link></li>
+                                                <li><Link href="/sports/men/golf" className="hover:text-black">Golf</Link></li>
+                                                <li><Link href="/sports/men/walking" className="hover:text-black">Walking</Link></li>
+                                                <li><Link href="/sports/men/cleats" className="hover:text-black">All Sports Cleats</Link></li>
+                                            </ul>
+                                        </div>
+
+                                        <div>
+                                            <h4 className="font-semibold mb-2 text-black">Kids</h4>
+                                            <ul className="space-y-1 text-sm text-black">
+                                                <li><Link href="/sports/kids/running" className="hover:text-black">Running</Link></li>
+                                                <li><Link href="/sports/kids/gym" className="hover:text-black">Gym Class</Link></li>
+                                                <li><Link href="/sports/kids/cleats" className="hover:text-black">All Sports Cleats</Link></li>
+                                                <li><Link href="/sports/kids/swimming" className="hover:text-black">Swimming</Link></li>
+                                                <li><Link href="/sports/kids/activewear" className="hover:text-black">Active Clothing</Link></li>
+                                            </ul>
+                                        </div>
+
+                                        <div>
+                                            <h4 className="font-semibold mb-2 text-black">Trending Brands</h4>
+                                            <ul className="space-y-1 text-sm text-black">
+                                                <li><Link href="/brands/adidas" className="hover:text-black">adidas Cleats</Link></li>
+                                                <li><Link href="/brands/asics" className="hover:text-black">ASICS</Link></li>
+                                                <li><Link href="/brands/beyond-yoga" className="hover:text-black">Beyond Yoga</Link></li>
+                                                <li><Link href="/brands/brooks" className="hover:text-black">Brooks</Link></li>
+                                                <li><Link href="/brands/keen" className="hover:text-black">KEEN</Link></li>
+                                                <li><Link href="/brands/new-balance" className="hover:text-black">New Balance Golf</Link></li>
+                                                <li><Link href="/brands/nike" className="hover:text-black">Nike</Link></li>
+                                                <li><Link href="/brands/on" className="hover:text-black">On</Link></li>
+                                                <li><Link href="/brands/under-armour" className="hover:text-black">Under Armour</Link></li>
+                                            </ul>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
                         {/* Shop Dropdown */}
                         <div
                             className="relative group"
@@ -250,7 +339,7 @@ export default function Navbar() {
                             onMouseLeave={() => setIsShopDropdownOpen(false)}
                         >
                             <button
-                                className={`flex items-center text-gray-700 hover:text-black transition-colors focus:outline-none ${pathname.startsWith('/shop') ? 'font-medium text-black' : ''
+                                className={`flex items-center text-gray-700 hover:text-black transition-colors ${pathname.startsWith('/shop') ? 'font-medium text-black' : ''
                                     }`}
                                 aria-expanded={isShopDropdownOpen}
                                 aria-haspopup="true"
@@ -369,6 +458,24 @@ export default function Navbar() {
                                 </div>
                             </div>
 
+                            {/* Mobile Sports Links */}
+                            <div className="pt-2 border-t border-gray-100">
+                                <p className="px-3 py-2 text-sm font-medium text-gray-500">
+                                    Sports
+                                </p>
+                                <div className="space-y-1">
+                                    <Link href="/sports/women" className="block py-2 px-3 rounded-md text-sm text-gray-700 hover:bg-gray-50">
+                                        Women's Sports
+                                    </Link>
+                                    <Link href="/sports/men" className="block py-2 px-3 rounded-md text-sm text-gray-700 hover:bg-gray-50">
+                                        Men's Sports
+                                    </Link>
+                                    <Link href="/sports/kids" className="block py-2 px-3 rounded-md text-sm text-gray-700 hover:bg-gray-50">
+                                        Kids' Sports
+                                    </Link>
+                                </div>
+                            </div>
+
                             <div className="pt-2 border-t border-gray-100">
                                 <p className="px-3 py-2 text-sm font-medium text-gray-500">
                                     Shop Categories
@@ -390,7 +497,7 @@ export default function Navbar() {
                             </div>
 
                             <div className="pt-2 border-t border-gray-100">
-                                <p className="px-3 py-2 text-sm font-medium text-gray-500">
+                                <p className="px-3 py-2 text-sm font-medium black">
                                     Account
                                 </p>
                                 <div className="space-y-1">
@@ -400,7 +507,7 @@ export default function Navbar() {
                                             href={link.href}
                                             className={`flex items-center py-2 px-3 rounded-md text-sm ${pathname === link.href
                                                     ? 'bg-gray-100 text-black font-medium'
-                                                    : 'text-gray-700 hover:bg-gray-50'
+                                                    : 'text-black hover:bg-gray-50'
                                                 } transition-colors`}
                                             onClick={link.label === 'Sign Out' ? handleLogout : undefined}
                                         >

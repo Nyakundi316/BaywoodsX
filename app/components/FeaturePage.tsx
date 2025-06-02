@@ -7,52 +7,52 @@ import { FiArrowRight, FiShoppingBag } from 'react-icons/fi';
 const featuredItems = [
   {
     id: 1,
-    title: "Urban Edge Jacket",
-    description: "Premium waterproof jacket with streetwear aesthetic",
-    price: 12500,
-    category: "Outerwear",
-    image: "https://images.pexels.com/photos/1765008/pexels-photo-1765008.jpeg"
+    title: "Nike Air Max",
+    description: "Signature Nike comfort with classic street appeal.",
+    price: 4500,
+    category: "Footwear",
+    image: "https://i.pinimg.com/736x/03/a4/69/03a469690805a58b99188f17e11aaeef.jpg"
   },
   {
     id: 2,
-    title: "Neon Nights Hoodie",
-    description: "Reflective pullover for night visibility",
-    price: 8500,
-    category: "Hoodies",
-    image: "https://images.pexels.com/photos/7679725/pexels-photo-7679725.jpeg"
+    title: "Tech Joggers",
+    description: "Performance fabric with hidden pockets",
+    price: 2000,
+    category: "Pants",
+    image: "https://i.pinimg.com/736x/29/33/79/293379e0a885d453063e8a1270732b15.jpg"
   },
   {
     id: 3,
-    title: "Tech Joggers",
-    description: "Performance fabric with hidden pockets",
-    price: 7500,
+    title: "Jorts",
+    description: "Utility shorts with multiple pockets",
+    price: 2000,
     category: "Pants",
-    image: "https://images.pexels.com/photos/1078974/pexels-photo-1078974.jpeg"
+    image: "https://i.pinimg.com/736x/6e/3f/b7/6e3fb7fb750031a2349a0cb205931163.jpg"
   },
   {
     id: 4,
-    title: "Retro Runners",
-    description: "Vintage-inspired sneakers with modern comfort",
-    price: 11000,
-    category: "Footwear",
-    image: "https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg"
+    title: "New Era Cap",
+    description: "Classic fitted cap with embroidered team logo",
+    price: 1800,
+    category: "Caps",
+    image: "https://i.pinimg.com/736x/bf/c0/aa/bfc0aadb7607fc31a8b579846fe45d87.jpg"
   },
   {
     id: 5,
-    title: "Cargo Shorts",
-    description: "Utility shorts with multiple pockets",
-    price: 6500,
-    category: "Shorts",
-    image: "https://images.pexels.com/photos/1488467/pexels-photo-1488467.jpeg"
+    title: "Balenciaga trainners",
+    description: "Vintage-inspired sneakers with modern comfort",
+    price: 4000,
+    category: "Footwear",
+    image: "https://i.pinimg.com/736x/e9/38/68/e938689f89e81f715939e65927a37d15.jpg"
   },
   {
     id: 6,
-    title: "Graphic Tee Bundle",
-    description: "Set of 3 limited edition artist collabs",
-    price: 9000,
-    category: "T-Shirts",
-    image: "https://images.pexels.com/photos/428338/pexels-photo-428338.jpeg"
-  }
+    title: "Nike tns",
+    description: "LIght and can be used for running",
+    price: 3500,
+    category: "Footwear",
+    image: "https://i.pinimg.com/736x/c2/1c/a2/c21ca2ea58f72b0ff94fc66fb63bce81.jpg"
+  },
 ];
 
 const staggerContainer = {
@@ -78,42 +78,61 @@ const itemAnimation = {
 };
 
 export default function FeaturePage() {
+  const mainFeatured = featuredItems[0];
+  const restItems = featuredItems.slice(1);
+
   return (
     <section className="bg-gray-50 text-black py-20 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Animated Header */}
-        <motion.div 
+        {/* Header */}
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-20"
+          className="text-center mb-16"
         >
           <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-black to-gray-600">
-            Featured Drops
+            Featured Streetwear
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Curated selection of our most exclusive streetwear pieces
+            Premium shoes, caps, and pants you can’t miss
           </p>
-          
-          <div className="mt-8 flex justify-center gap-4">
+        </motion.div>
+
+        {/* Main Featured Product */}
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          variants={itemAnimation}
+          viewport={{ once: true }}
+          className="flex flex-col lg:flex-row items-center gap-10 mb-20"
+        >
+          <div className="relative w-full lg:w-1/2 h-[500px] rounded-2xl overflow-hidden shadow-xl">
+            <Image
+              src={mainFeatured.image}
+              alt={mainFeatured.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              priority
+            />
+          </div>
+
+          <div className="lg:w-1/2 text-center lg:text-left">
+            <h2 className="text-3xl font-bold mb-2">{mainFeatured.title}</h2>
+            <p className="text-gray-600 mb-4">{mainFeatured.description}</p>
+            <p className="text-xl font-semibold mb-6">KES {mainFeatured.price.toLocaleString()}</p>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-6 py-3 bg-black text-white rounded-full flex items-center gap-2"
+              className="px-6 py-3 bg-black text-white rounded-full flex items-center gap-2 mx-auto lg:mx-0"
             >
-              View All Collections <FiArrowRight />
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-3 border border-black rounded-full flex items-center gap-2"
-            >
-              New Arrivals
+              <FiShoppingBag /> Add to Cart
             </motion.button>
           </div>
         </motion.div>
 
-        {/* Featured Items Grid */}
+        {/* Rest of Featured Items */}
         <motion.div
           variants={staggerContainer}
           initial="hidden"
@@ -121,72 +140,37 @@ export default function FeaturePage() {
           viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          {featuredItems.map((item) => (
+          {restItems.map((item) => (
             <motion.div
               key={item.id}
               variants={itemAnimation}
               whileHover={{ y: -5 }}
               className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group"
             >
-              <div className="relative w-full h-96 overflow-hidden">
+              <div className="relative w-full h-80 overflow-hidden">
                 <Image
                   src={item.image}
                   alt={item.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  priority={item.id <= 3}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-                <div className="absolute top-4 right-4">
+              </div>
+              <div className="p-6">
+                <span className="text-sm text-gray-500">{item.category}</span>
+                <h3 className="text-xl font-bold mt-1">{item.title}</h3>
+                <p className="text-gray-600 mt-2 mb-4">{item.description}</p>
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold">KES {item.price.toLocaleString()}</span>
                   <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="p-3 bg-white rounded-full shadow-md"
+                    whileTap={{ scale: 0.95 }}
+                    className="p-2 bg-black text-white rounded-full"
                   >
-                    <FiShoppingBag className="w-5 h-5" />
+                    <FiShoppingBag />
                   </motion.button>
                 </div>
               </div>
-              
-              <div className="p-6">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <span className="text-sm text-gray-500">{item.category}</span>
-                    <h3 className="text-xl font-bold mt-1">{item.title}</h3>
-                  </div>
-                  <span className="font-bold text-lg">KES {item.price.toLocaleString()}</span>
-                </div>
-                
-                <p className="text-gray-600 mt-2 mb-4">{item.description}</p>
-                
-                <motion.button
-                  whileHover={{ backgroundColor: "#000000" }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full py-3 bg-gray-900 text-white rounded-lg flex items-center justify-center gap-2"
-                >
-                  Add to Cart
-                </motion.button>
-              </div>
             </motion.div>
           ))}
-        </motion.div>
-
-        {/* View More Button */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          viewport={{ once: true }}
-          className="mt-16 text-center"
-        >
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="px-8 py-4 border-2 border-black rounded-full font-medium flex items-center gap-2 mx-auto"
-          >
-            Load More <FiArrowRight />
-          </motion.button>
         </motion.div>
       </div>
     </section>

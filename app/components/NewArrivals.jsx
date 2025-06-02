@@ -11,28 +11,28 @@ export default function NewArrivals() {
       price: "KES 17,999",
       tag: "New",
       category: "sneakers",
-      image: "https://images.unsplash.com/photo-1600185365137-0fbb4f79aa62?auto=format&fit=crop&w=800&q=80",
+      image: "https://i.pinimg.com/736x/36/5b/ce/365bce5f6114848726e8457c4da4258e.jpg",
     },
     {
       name: "New Era Cap",
       price: "KES 4,800",
       tag: "Sale",
       category: "caps",
-      image: "https://images.unsplash.com/photo-1584811914966-19566cfe638b?auto=format&fit=crop&w=800&q=80",
+      image: "https://i.pinimg.com/736x/b5/fb/41/b5fb4104d8facc205ec8aec22fcf2cbd.jpg",
     },
     {
       name: "Gym Hoodie",
       price: "KES 6,500",
       tag: "New",
       category: "gymwear",
-      image: "https://images.unsplash.com/photo-1599058917212-d750089bc06b?auto=format&fit=crop&w=800&q=80",
+      image: "https://i.pinimg.com/736x/a7/6e/45/a76e453eeb930fbefe31e200ad26142e.jpg",
     },
     {
       name: "Sweatpants",
       price: "KES 7,200",
       tag: "",
       category: "sweatpants",
-      image: "https://images.unsplash.com/photo-1598970434795-0c54fe7c0642?auto=format&fit=crop&w=800&q=80",
+      image: "https://i.pinimg.com/736x/6b/60/cf/6b60cf3ce9dd05c1e723c8916ebc9c65.jpg",
     },
   ];
 

@@ -28,7 +28,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "app/shop/page.jsx", "app/components/NewArrivals.jsx", "app/components/ProductCard.tsx", "app/register/page.jsx"  ],
+, "app/shop/page.jsx", "app/components/NewArrivals.jsx", "app/components/ProductCard.tsx", "app/register/page.jsx", "app/components/HeroSection.jsx", "app/components/FilterSidebar.jsx", "app/components/SortDropdown.tsx"  ],
   "exclude": [
     "node_modules"
   ]

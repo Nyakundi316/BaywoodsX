@@ -3,21 +3,22 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 const categories = [
   {
     name: "Sneakers",
-    image: "https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&h=750&w=800",
+    image: "https://i.pinimg.com/736x/57/80/09/578009ae4c2733357cc002ca74fe96e2.jpg",
     link: "/shop?category=sneakers"
   },
   {
     name: "Caps",
-    image: "https://images.pexels.com/photos/1488467/pexels-photo-1488467.jpeg?auto=compress&cs=tinysrgb&h=750&w=800",
+    image: "https://i.pinimg.com/736x/e0/df/75/e0df759d3cf890d65f2818c98ec7dc09.jpg",
     link: "/shop?category=caps"
   },
   {
     name: "Sweatpants",
-    image: "https://images.pexels.com/photos/1078974/pexels-photo-1078974.jpeg?auto=compress&cs=tinysrgb&h=750&w=800",
+    image: "https://i.pinimg.com/736x/01/78/08/017808fac7ee0f1eb0f2e88ef3ebbe86.jpg",
     link: "/shop?category=sweatpants"
   },
   {
@@ -27,34 +28,40 @@ const categories = [
   },
   {
     name: "Hoodies",
-    image: "https://images.pexels.com/photos/7679725/pexels-photo-7679725.jpeg?auto=compress&cs=tinysrgb&h=750&w=800",
+    image: "https://i.pinimg.com/736x/25/dc/bf/25dcbf493c17896a45eeeb9b8f1ba218.jpg",
     link: "/shop?category=hoodies"
   }
 ];
 
 export default function HeroSection() {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <section className="relative bg-white text-black overflow-hidden">
-      {/* Background Image with Parallax Effect */}
+      {/* Background Image with Parallax Effect - Fixed Implementation */}
       <div className="absolute inset-0 -z-10 h-[120vh] overflow-hidden">
-        <motion.div
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 2, ease: "easeOut" }}
-          className="absolute inset-0 w-full h-full"
-        >
-          <Image
-            src="https://images.pexels.com/photos/4066291/pexels-photo-4066291.jpeg?auto=compress&cs=tinysrgb&h=1080"
-            alt="Urban streetwear fashion"
-            fill
-            className="object-cover"
-            priority
-            quality={100}
-          />
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/30" />
-        </motion.div>
+        {isMounted && (
+          <motion.div
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 2, ease: "easeOut" }}
+            className="absolute inset-0 w-full h-full"
+          >
+            {/* Using standard img tag for background to avoid hydration issues */}
+            <img
+              src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2080&q=80"
+              alt="Urban streetwear fashion"
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="eager"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/30" />
+          </motion.div>
+        )}
       </div>
 
       {/* Hero Content */}
@@ -95,21 +102,21 @@ export default function HeroSection() {
               href="/shop"
               className="relative px-8 py-3 sm:py-4 rounded-full bg-white text-black font-bold text-lg overflow-hidden group"
             >
-              <span className="relative z-10 text-black">Shop Collection</span>
+              <span className="relative z-10">Shop Collection</span>
               <span className="absolute inset-0 bg-gradient-to-r from-white to-gray-200 group-hover:opacity-90 transition-opacity" />
             </Link>
             <Link
               href="/new-arrivals"
               className="relative px-8 py-3 sm:py-4 rounded-full border-2 border-white text-white font-bold text-lg overflow-hidden group"
             >
-              <span className="relative z-10 text-black">New Arrivals</span>
-              <span className="absolute inset-0 bg-gray-300 group-hover:bg-gray/20 transition-colors " />
+              <span className="relative z-10">New Arrivals</span>
+              <span className="text-black absolute inset-0 bg-black/10 group-hover:bg-gray/20 transition-colors" />
             </Link>
           </motion.div>
         </motion.div>
       </div>
 
-      {/* Category Cards */}
+      {/* Category Cards - Using Next.js Image component properly */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16 pt-8 sm:pt-12">
         <motion.div
           initial={{ opacity: 0 }}
@@ -150,13 +157,14 @@ export default function HeroSection() {
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                         quality={90}
+                        priority={index < 3} // Prioritize first few images
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                       <div className="absolute bottom-0 left-0 p-6">
                         <h3 className="text-2xl font-bold text-white group-hover:text-gray-300 transition-colors">
                           {cat.name}
                         </h3>
-                        <p className="text-gray-300 mt-1">Explore collection →</p>
+                        <p className="text-white mt-1">Explore collection →</p>
                       </div>
                     </div>
                   </Link>
