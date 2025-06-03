@@ -1,19 +1,41 @@
 "use client";
+
 import { HeartIcon, StarIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 
-export default function ProductCard({ product }) {
+interface Product {
+  id?: number;
+  image: string;
+  name: string;
+  brand: string;
+  rating?: number;
+  reviewCount?: number;
+  price: number | string;
+  originalPrice?: number | string;
+  colors?: string[];
+  isNew?: boolean;
+  isSponsored?: boolean;
+  isLowStock?: boolean;
+  slug?: string;
+  images?: string[];
+  isBestSeller?: boolean;
+}
+
+interface ProductCardProps {
+  product: Product;
+}
+
+export default function ProductCard({ product }: ProductCardProps) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  const toggleFavorite = (e) => {
+  const toggleFavorite = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsFavorite(!isFavorite);
   };
 
-  const formatPrice = (price) => {
+  const formatPrice = (price: number | string) => {
     const numeric = typeof price === 'number' ? price : parseFloat(price);
     return isNaN(numeric) ? '0.00' : numeric.toFixed(2);
   };
@@ -32,6 +54,7 @@ export default function ProductCard({ product }) {
           className="w-full h-64 object-cover transition-transform duration-300 hover:scale-105"
           loading="lazy"
         />
+
         {/* Badges */}
         <div className="absolute top-2 left-2 flex flex-col space-y-1">
           {product.isNew && <span className="bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded">New</span>}
@@ -66,7 +89,7 @@ export default function ProductCard({ product }) {
           <div className="flex items-center">
             <StarIcon className="h-4 w-4 text-yellow-400 fill-current" />
             <span className="ml-1 text-sm text-gray-600">
-              {(product.rating || 0).toFixed(1)} ({product.reviewCount || 0})
+              {(product.rating ?? 0).toFixed(1)} ({product.reviewCount ?? 0})
             </span>
           </div>
         </div>
@@ -82,7 +105,7 @@ export default function ProductCard({ product }) {
                 ${formatPrice(product.originalPrice)}
               </span>
               <span className="ml-2 text-sm text-red-600">
-                {Math.round((1 - product.price / product.originalPrice) * 100)}% OFF
+                {Math.round((1 - Number(product.price) / Number(product.originalPrice)) * 100)}% OFF
               </span>
             </div>
           ) : (
@@ -93,13 +116,13 @@ export default function ProductCard({ product }) {
         </div>
 
         {/* Colors */}
-        {Array.isArray(product.colors) && product.colors.length > 0 && (
+        {product.colors?.length > 0 && (
           <div className="mt-3">
             <div className="flex items-center space-x-2">
               <div className="flex -space-x-1">
                 {product.colors.slice(0, 3).map((color, index) => (
                   <span 
-                    key={color + index}
+                    key={`${color}-${index}`}
                     className="w-5 h-5 rounded-full border border-gray-200 shadow-sm hover:transform hover:scale-125 hover:z-10 transition-transform"
                     style={{ backgroundColor: color.toLowerCase() }}
                     title={color}
@@ -125,19 +148,3 @@ export default function ProductCard({ product }) {
     </div>
   );
 }
-
-ProductCard.propTypes = {
-  product: PropTypes.shape({
-    image: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    brand: PropTypes.string.isRequired,
-    rating: PropTypes.number,
-    reviewCount: PropTypes.number,
-    price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    originalPrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    colors: PropTypes.arrayOf(PropTypes.string),
-    isNew: PropTypes.bool,
-    isSponsored: PropTypes.bool,
-    isLowStock: PropTypes.bool,
-  }).isRequired,
-};

@@ -6,6 +6,7 @@ import ProductCard from '../../../components/ProductCard';
 import FilterSidebar from '../../../components/FilterSidebar';
 import SortDropdown from '../../../components/SortDropdown';
 
+
 export default function MenRunners() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);

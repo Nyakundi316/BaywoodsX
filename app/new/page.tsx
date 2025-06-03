@@ -32,7 +32,7 @@ export default function ShoesPage() {
       try {
         setIsLoading(true);
         setError(null);
-        
+
         // Replace with your actual API endpoint
         const response = await fetch('https://your-backend-api.com/products', {
           method: 'POST',
@@ -50,7 +50,7 @@ export default function ShoesPage() {
         }
 
         const data = await response.json();
-        
+
         // Transform the backend data to match our frontend interface
         const formattedProducts = data.products.map((product: any) => ({
           id: product.id,
@@ -82,7 +82,7 @@ export default function ShoesPage() {
   const handleFilterChange = (newFilters: any) => {
     setFilters(newFilters);
     const active = Object.entries(newFilters)
-      .flatMap(([key, values]) => 
+      .flatMap(([key, values]) =>
         Array.isArray(values) ? values.map(value => `${key}: ${value}`) : []
       );
     setActiveFilters(active);
@@ -170,12 +170,12 @@ export default function ShoesPage() {
                 <div className="flex flex-wrap items-center gap-2">
                   <h2 className="font-bold mr-2">Your Selections:</h2>
                   {activeFilters.map((filter, index) => (
-                    <span 
+                    <span
                       key={index}
                       className="px-3 py-1 bg-gray-200 rounded-full text-sm flex items-center"
                     >
                       {filter}
-                      <button 
+                      <button
                         onClick={() => {
                           // Implement logic to remove this specific filter
                           const [key, value] = filter.split(': ');
@@ -187,7 +187,7 @@ export default function ShoesPage() {
                       </button>
                     </span>
                   ))}
-                  <button 
+                  <button
                     onClick={clearFilters}
                     className="ml-auto text-sm text-blue-600 hover:text-blue-800 hover:underline"
                   >
@@ -216,17 +216,22 @@ export default function ShoesPage() {
                   {products.map(product => (
                     <ProductCard
                       key={product.id}
-                      name={product.name}
-                      price={product.price}
-                      originalPrice={product.originalPrice}
-                      image={product.image}
-                      slug={product.slug}
-                      images={product.images}
-                      brand={product.brand}
-                      isNew={product.isNew}
-                      isBestSeller={product.isBestSeller}
-                      rating={product.rating}
+                      product={{
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        originalPrice: product.originalPrice,
+                        image: product.image,
+                        slug: product.slug,
+                        images: product.images,
+                        brand: product.brand,
+                        isNew: product.isNew,
+                        isBestSeller: product.isBestSeller,
+                        rating: product.rating,
+                      }}
                     />
+
+
                   ))}
                 </div>
 
