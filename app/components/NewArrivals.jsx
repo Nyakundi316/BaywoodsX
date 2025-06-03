@@ -91,7 +91,7 @@ export default function NewArrivals() {
 
         <div className="mt-10 text-center">
           <Link
-            href="/shop"
+            href="/new-arrivals"
             className="inline-block bg-black text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-900"
           >
             View All Products
