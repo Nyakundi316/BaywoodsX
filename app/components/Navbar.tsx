@@ -68,9 +68,6 @@ export default function Navbar() {
     ]
 
     const categoryLinks = [
-        { href: '/women', label: 'Women' },
-        { href: '/men', label: 'Men' },
-        { href: '/kids', label: 'Kids' },
         { href: '/new', label: 'New' },
         { href: '/sale', label: 'Sale' },
     ]
